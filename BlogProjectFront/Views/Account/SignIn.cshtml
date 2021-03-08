@@ -1,0 +1,31 @@
+@model AppUserSignInModel
+@{
+    Layout=null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="/css/simplex.css">
+</head>
+<body>
+    <form asp-action="SignIn" method="POST" class="w-50 mt-5 p-3 mx-auto shadow"> 
+        <div class="form-group">
+            <label for="UserName">Username :</label>
+            <input asp-for="UserName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="Password">Password :</label>
+            <input asp-for="Password" class="form-control" type="password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-info btn-block">Sign In</button>
+        </div>
+    </form>    
+</body>
+</html>
+

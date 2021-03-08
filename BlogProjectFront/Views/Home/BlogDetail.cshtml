@@ -1,0 +1,93 @@
+@model BlogListModel
+
+@{
+    var comments = (List<CommentListModel>)ViewBag.Comments;
+
+    void GetComments(List<CommentListModel> comments)
+        {
+            if(comments.Count > 0)
+            {
+                foreach (var item in comments)
+                {
+                    <!-- Comment with nested comments -->
+                    <div class="media my-3">
+                        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                        <div class="media-body">
+                            <h5 class="mt-0 text-danger">@item.AuthorName</h5>
+                            @item.Description
+                            <button type="button" class="btn btn-sm btn-outline-primary float-right" onclick="showCommentForm(@item.Id, @item.BlogId)">Answer</button>
+                            <div id="commentBox@(item.Id)">
+
+                            </div>
+                            @{
+                                GetComments(item.SubCumments);
+                            }
+                        </div>
+                    </div>    
+                }
+            }
+        }
+}
+<!-- Title -->
+<h1 class="mt-4">@Model.Title</h1>
+
+<!-- Author -->
+@* <p class="lead">
+    by
+    <a href="#">Start Bootstrap</a>
+</p> *@
+
+<hr>
+
+<!-- Date/Time -->
+<p>Posted on @Model.PostedTime.ToLongDateString()</p>
+
+<hr>
+
+<!-- Preview Image -->
+<getblogimage id="@Model.Id" blog-image-type="@BlogImageType.BlogDetail"></getblogimage>
+<hr>
+
+<!-- Post Content -->
+@Html.Raw(Model.Description)
+
+<hr>
+
+<!-- Comments Form -->
+<div class="card my-4">
+    <h5 class="card-header">Leave a Comment:</h5>
+    <div class="card-body">
+        <form method="POST" action="/Home/AddToComment">
+            <input type="hidden" name="BlogId" value="@Model.Id"/>
+            
+            <div class="form-group">
+                <label>Author Name :</label>
+                <input type="text" class="form-control" name="AuthorName" required/>
+            </div>
+            <div class="form-group">
+                <label>Email :</label>
+                <input type="email" class="form-control" name="AuthorEmail" required/>
+            </div>
+            <div class="form-group">
+                <label>Your Comment :</label>
+                <textarea class="form-control" rows="3" name="Description" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+@{
+    GetComments(comments);
+}
+
+@section JavaScript {
+    <script>
+        function showCommentForm(id, blogId) {
+            let html = `<div class="card my-4"><h5 class="card-header">Leave a Comment:</h5><div class="card-body"><form method="POST" action="/Home/AddToComment"> <input type="hidden" name="BlogId" value="${blogId}" /> <input type="hidden" name="ParentCommentId" value="${id}"/><div class="form-group"> <label>Author Name :</label> <input type="text" class="form-control" name="AuthorName" required/></div><div class="form-group"> <label>Email :</label> <input type="email" class="form-control" name="AuthorEmail" required/></div><div class="form-group"><label>Your Comment :</label><textarea class="form-control" rows="3" name="Description" required ></textarea></div> <button type="button" class="btn btn-warning" onclick="hideCommentForm(${id})">Cancel</button> <button type="submit" class="btn btn-primary">Submit</button></form></div></div>`;
+            $("#commentBox"+id).html(html);
+        }
+        function hideCommentForm(id) {
+            $("#commentBox"+id).html("");
+        }
+    </script>
+}

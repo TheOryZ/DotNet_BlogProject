@@ -1,0 +1,14 @@
+@model List<AssignCategoryModel>
+
+<form action="AssignCategory" method="POST">
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        <div class="form-check">
+            <input type="hidden" asp-for="@Model[i].CategoryName">
+            <input type="hidden" asp-for="@Model[i].CategoryId">
+            <input asp-for="@Model[i].Exists" class="form-check-input" type="checkbox">
+            <label asp-for="@Model[i].Exists" class="form-check-label">@Model[i].CategoryName</label>
+        </div>   
+    }
+    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+</form>

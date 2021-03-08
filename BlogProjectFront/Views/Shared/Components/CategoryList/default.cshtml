@@ -1,0 +1,14 @@
+@model List<CategoryWithBlogsCountModel>
+
+<div class="card my-4">
+    <h5 class="card-header">Categories</h5>
+    @foreach (var item in Model)
+    {
+        <div class="list-group">
+            <a asp-action="Index" asp-route-categoryId="@item.CategoryId" class="list-group-item list-group-item-action (@ViewBag.ActiveCategory?.ToString()==item.CategoryId.ToString()"active":"") d-flex justify-content-between align-items-center">
+                @item.CategoryName
+                <span class="badge badge-primary badge-pill">@item.BlogsCount</span>
+            </a>
+        </div>
+    }
+</div>
