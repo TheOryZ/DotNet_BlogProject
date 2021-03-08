@@ -4,6 +4,10 @@
 {
     @await Component.InvokeAsync("GetCategoryName", new {@categoryId=(int)ViewBag.ActiveCategory})
 }
+@if(!string.IsNullOrWhiteSpace(@ViewBag.SearchString))
+{
+    @await Component.InvokeAsync("Search", new {@s = @ViewBag.SearchString})
+}
 @foreach (var item in Model)
 {
     <div class="card mb-4">

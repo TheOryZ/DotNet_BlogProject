@@ -1,12 +1,12 @@
 @model List<BlogListModel>
 
-<a asp-action="Create" asp-controller="Blog" asp-area="Admin" class="btn btn-info bt-sm">Add New Blog</a>
-<table class="table table-bordered table-hover">
+<a asp-action="Create" asp-controller="Blog" asp-area="Admin" class="btn btn-outline-info bt-sm my-2">Add New Blog</a>
+<table class="table table-bordered table-hover table-sm">
     <tbody>
         <tr>
             <th>Title</th>
             <th>Categories Operations</th>
-            <th>Standart Operations</th>
+            <th>Operations</th>
         </tr>
         @foreach (var item in Model)
         {

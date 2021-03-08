@@ -1,8 +1,12 @@
 @model List<CategoryListModel>
 
-<a asp-action="Create" asp-controller="Category" asp-area="Admin" class="btn btn-info bt-sm">Add New Category</a>
-<table class="table table-bordered table-hover">
+<a asp-action="Create" asp-controller="Category" asp-area="Admin" class="btn btn-outline-info bt-sm my-2">Add New Category</a>
+<table class="table table-bordered table-hover table-sm">
     <tbody>
+        <tr>
+            <th>Category Name</th>
+            <th>Operations</th>
+        </tr>
         @foreach (var item in Model)
         {
             <tr>
