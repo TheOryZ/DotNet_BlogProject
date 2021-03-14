@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace BlogProject.WebApi
 {
@@ -32,16 +33,41 @@ namespace BlogProject.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(opt =>
+            {
+                opt.SwaggerDoc("doc", new OpenApiInfo
+                {
+                    Title = "Blog Api",
+                    Description = "Blog Api Description",
+                    Contact = new OpenApiContact
+                    {
+                        Email = "kadirrturan@gmail.com",
+                        Name = "Kadir Turan",
+                        //Url = new Uri(""),
+                    }
+                });
+                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Name = "Authoriztion",
+                    Type = SecuritySchemeType.Http,
+                    Description = "Bearer {token}"
+                });
+            });
+            services.Configure<JwtInfo>(Configuration.GetSection("JWTInfo"));
+            var jwtInfo = Configuration.GetSection("JWTInfo").Get<JwtInfo>();
+
             services.AddAutoMapper(typeof(Startup));
             services.AddDependencies();
             services.AddScoped(typeof(ValidId<>));
+            services.AddMemoryCache();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => {
                 opt.RequireHttpsMetadata = false;
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = JwtInfo.Issuer,
-                    ValidAudience = JwtInfo.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtInfo.SecurityKey)),
+                    ValidIssuer = jwtInfo.Issuer,
+                    ValidAudience = jwtInfo.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtInfo.SecurityKey)),
                     ValidateLifetime = true,
                     ValidateAudience = true,
                     ValidateIssuer = true,
@@ -61,11 +87,16 @@ namespace BlogProject.WebApi
             //{
             //    app.UseDeveloperExceptionPage();
             //}
-            app.UseExceptionHandler("/Error");
+            app.UseExceptionHandler("/api/Error");
             app.UseRouting();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSwagger();
+            app.UseSwaggerUI(opt =>
+            {
+                opt.SwaggerEndpoint("/swagger/doc/swagger.json", "Blog Api");
+            });
 
             app.UseEndpoints(endpoints =>
             {

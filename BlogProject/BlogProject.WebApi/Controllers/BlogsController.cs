@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BlogProject.Business.Interfaces;
+using BlogProject.Business.Tools.FacadeTool;
 using BlogProject.DTO.Dtos.BlogDtos;
 using BlogProject.DTO.Dtos.CategoryBlogDtos;
 using BlogProject.DTO.Dtos.CategoryDtos;
@@ -15,6 +16,7 @@ using BlogProject.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BlogProject.WebApi.Controllers
 {
@@ -25,16 +27,29 @@ namespace BlogProject.WebApi.Controllers
         private readonly IBlogService _blogService;
         private readonly IMapper _mapper;
         private readonly ICommentService _commentService;
-        public BlogsController(IBlogService blogService, IMapper mapper, ICommentService commentService)
+        private readonly IFacade _facade;
+        public BlogsController(IBlogService blogService, IMapper mapper, ICommentService commentService, IFacade facade)
         {
             _blogService = blogService;
             _mapper = mapper;
             _commentService = commentService;
+            _facade = facade;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(_mapper.Map<List<BlogListDto>>(await _blogService.GetAllSortedByPostedTimeAsync()));
+            if(_facade.MemoryCache.TryGetValue("blogList",out List<BlogListDto> list))
+            {
+                return Ok(list);
+            }
+            var blogs = _mapper.Map<List<BlogListDto>>(await _blogService.GetAllSortedByPostedTimeAsync());
+            _facade.MemoryCache.Set("blogList", blogs, new MemoryCacheEntryOptions()
+            {
+                AbsoluteExpiration = DateTime.Now.AddDays(1),
+                Priority = CacheItemPriority.Normal
+            });
+
+            return Ok(blogs);
         }
         [HttpGet("{id}")]
         [ServiceFilter(typeof(ValidId<Blog>))]

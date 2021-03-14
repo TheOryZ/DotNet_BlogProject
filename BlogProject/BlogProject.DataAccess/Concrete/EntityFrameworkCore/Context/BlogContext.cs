@@ -1,6 +1,7 @@
 ﻿using BlogProject.DataAccess.Concrete.EntityFrameworkCore.Mapping;
 using BlogProject.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,9 +10,14 @@ namespace BlogProject.DataAccess.Concrete.EntityFrameworkCore.Context
 {
     public class BlogContext : DbContext
     {
+        private readonly IConfiguration _configuration;
+        public BlogContext(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server=DESKTOP-FBRBM6G; database=BlogProjectDb; integrated security=true;");
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("ConnectionName"));
 
             base.OnConfiguring(optionsBuilder);
         }

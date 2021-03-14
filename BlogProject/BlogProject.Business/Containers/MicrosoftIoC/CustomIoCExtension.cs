@@ -1,8 +1,10 @@
 ﻿using BlogProject.Business.Concrete;
 using BlogProject.Business.Interfaces;
+using BlogProject.Business.Tools.FacadeTool;
 using BlogProject.Business.Tools.JWT;
 using BlogProject.Business.Tools.LogTool;
 using BlogProject.Business.ValidationRules.FluentValidation;
+using BlogProject.DataAccess.Concrete.EntityFrameworkCore.Context;
 using BlogProject.DataAccess.Concrete.EntityFrameworkCore.Repositories;
 using BlogProject.DataAccess.Interfaces;
 using BlogProject.DTO.Dtos.AppUserDtos;
@@ -18,6 +20,8 @@ namespace BlogProject.Business.Containers.MicrosoftIoC
     {
         public static void AddDependencies(this IServiceCollection services)
         {
+            services.AddDbContext<BlogContext>();
+
             services.AddScoped(typeof(IGenericDal<>), typeof(EfGenericRepository<>));
             services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
 
@@ -32,6 +36,7 @@ namespace BlogProject.Business.Containers.MicrosoftIoC
 
             services.AddScoped<IJwtService, JwtManager>();
             services.AddScoped<ICustomLogger, NLogAdapter>();
+            services.AddScoped<IFacade, Facade>();
 
             services.AddTransient<IValidator<AppUserSignInDto>, AppUserSignInValidator>();
             services.AddTransient<IValidator<CategoryAddDto>, CategoryAddValidator>();

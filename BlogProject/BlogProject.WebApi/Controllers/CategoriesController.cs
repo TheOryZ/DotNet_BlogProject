@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using BlogProject.Business.Interfaces;
+using BlogProject.Business.Tools.FacadeTool;
 using BlogProject.Business.Tools.LogTool;
 using BlogProject.DTO.Dtos.CategoryDtos;
 using BlogProject.Entities.Concrete;
@@ -18,12 +19,12 @@ namespace BlogProject.WebApi.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICategoryService _categoryService;
-        private readonly ICustomLogger _customLogger;
-        public CategoriesController(IMapper mapper, ICategoryService categoryService, ICustomLogger customLogger)
+        
+        public CategoriesController(IMapper mapper, ICategoryService categoryService)
         {
             _mapper = mapper;
             _categoryService = categoryService;
-            _customLogger = customLogger;
+            
         }
 
         [HttpGet]
@@ -81,14 +82,6 @@ namespace BlogProject.WebApi.Controllers
                 listCategory.Add(categoryWithBlogsCountDtos);
             }
             return Ok(listCategory);
-        }
-
-        [Route("/Error")]
-        public IActionResult Error()
-        {
-            var errorInfo = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            _customLogger.LogError($"\nWhere the error occurred : {errorInfo.Path}\n Error Message : {errorInfo.Error.Message}\n Stack Trace : {errorInfo.Error.StackTrace}");
-            return Problem(detail: "Something went wrong. It will be fixed as soon as possible.");
         }
     }
 }
