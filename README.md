@@ -1,2 +1,2 @@
-# DotNet_BlogProject
- DotNet_BlogProject
+# DotNet Blog Project
+ Web Api and Frontend 
