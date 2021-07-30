@@ -20,6 +20,24 @@ namespace BlogProject.DataAccess.Concrete.EntityFrameworkCore.Mapping
             builder.Property(I => I.Surname).HasMaxLength(100);
 
             builder.HasMany(I => I.Blogs).WithOne(I => I.AppUser).HasForeignKey(I => I.AppUserId);
+
+            builder.HasData(Data());
+        }
+
+        IEnumerable<AppUser> Data()
+        {
+            return new List<AppUser>
+            {
+                new AppUser
+                {
+                    Id = 1,
+                    Name = "John",
+                    Surname = "Doe",
+                    UserName = "JohnDoe",
+                    Password = "0",
+                    Email = "johndoe@gmail.com"
+                }
+            };
         }
     }
 }

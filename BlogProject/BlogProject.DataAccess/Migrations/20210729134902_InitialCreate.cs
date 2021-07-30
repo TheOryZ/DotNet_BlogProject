@@ -11,13 +11,13 @@ namespace BlogProject.DataAccess.Migrations
                 name: "AppUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Surname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    UserName = table.Column<string>(maxLength: 100, nullable: false),
+                    Password = table.Column<string>(maxLength: 100, nullable: false),
+                    Email = table.Column<string>(maxLength: 100, nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: true),
+                    Surname = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,9 +28,9 @@ namespace BlogProject.DataAccess.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Name = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,14 +41,14 @@ namespace BlogProject.DataAccess.Migrations
                 name: "Blogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ShortDescription = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Title = table.Column<string>(maxLength: 100, nullable: false),
+                    ShortDescription = table.Column<string>(maxLength: 300, nullable: false),
                     Description = table.Column<string>(type: "ntext", nullable: true),
-                    ImagePath = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-                    PostedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AppUserId = table.Column<int>(type: "int", nullable: false)
+                    ImagePath = table.Column<string>(maxLength: 300, nullable: true),
+                    PostedTime = table.Column<DateTime>(nullable: false),
+                    AppUserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,10 +65,10 @@ namespace BlogProject.DataAccess.Migrations
                 name: "CategoryBlogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BlogId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    BlogId = table.Column<int>(nullable: false),
+                    CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,14 +91,14 @@ namespace BlogProject.DataAccess.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AuthorName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    AuthorEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    PostedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParentCommentId = table.Column<int>(type: "int", nullable: true),
-                    BlogId = table.Column<int>(type: "int", nullable: false)
+                    AuthorName = table.Column<string>(maxLength: 100, nullable: false),
+                    AuthorEmail = table.Column<string>(maxLength: 100, nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: false),
+                    PostedTime = table.Column<DateTime>(nullable: false),
+                    ParentCommentId = table.Column<int>(nullable: true),
+                    BlogId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -123,15 +123,15 @@ namespace BlogProject.DataAccess.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CategoryBlogs_CategoryId",
+                table: "CategoryBlogs",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CategoryBlogs_BlogId_CategoryId",
                 table: "CategoryBlogs",
                 columns: new[] { "BlogId", "CategoryId" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CategoryBlogs_CategoryId",
-                table: "CategoryBlogs",
-                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_BlogId",
